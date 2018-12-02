@@ -1,12 +1,14 @@
 // first we import our dependencies…
 const Comment = require('./models/comment');
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 
 // and create our instances
 const app = express();
+app.use(cors());
 const router = express.Router();
 
 // set our port to either a predetermined port number if you have set it up, or 3001
@@ -27,11 +29,14 @@ app.use('/api', router);
 // db config -- set your URI from mLab in secrets.js
 mongoose.connect('mongodb://localhost:27017/commentsDb');
 var db = mongoose.connection;
+//console.log(db);
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 router.get('/comments', (req, res) => {
+  console.log("in get");;
   Comment.find((err, comments) => {
     if (err) return res.json({ success: false, error: err });
+    console.log(comments);
     return res.json({ success: true, data: comments });
   });
 });
